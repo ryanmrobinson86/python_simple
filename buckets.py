@@ -9,7 +9,7 @@ class manager:
     " Manage the process queue and keep track of states already seen, and manage relations among states"
     def __init__(self):
         self.queue = []
-        self.seen = {}
+        self.parents = {}
 
     def getState(self):
         "return next state and pop it off the queue"
@@ -20,10 +20,11 @@ class manager:
         return state
 
     def addState(self, parentState, newState):
-        "add state if it's new, remember it's parent"
-        if self.seen.has_key(str(newState)):
+        """add state if it's new, remember it's parent. if there's already an entry in
+		the parents dictionary then we've seen this state before."""
+        if self.parents.has_key(str(newState)):
             return
-        self.seen[str(newState)] = str(parentState)
+        self.parents[str(newState)] = str(parentState)
         self.queue.append(newState)
         #print '--- Adding ', newState, "<--- ", parentState
 
@@ -40,7 +41,7 @@ class manager:
     def getParent(self, childState):
         "return parent of the childState"
         try:
-            return self.seen[str(childState)]
+            return self.parents[str(childState)]
         except:
             return None
 
